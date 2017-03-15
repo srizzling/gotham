@@ -47,6 +47,15 @@ func viewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(b))
 }
 
+func viewAliasesHandler(w http.ResponseWriter, r *http.Request) {
+	keys := make([]string, 0, len(devices))
+	for k := range devices {
+		keys = append(keys, k)
+	}
+	b, _ := json.Marshal(keys)
+	fmt.Fprintf(w, string(b))
+}
+
 func viewServiceHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	filter := vars["service"]
@@ -123,6 +132,6 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/view", viewIndexHandler)
 	router.HandleFunc("/view/{device}", viewDeviceHandler)
-
+	router.HandleFunc("/alias", viewAliasesHandler)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
