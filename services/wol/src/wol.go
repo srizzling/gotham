@@ -1,16 +1,15 @@
-package main
+package wol
 
 import (
 	"bytes"
+	"context"
 	"encoding/binary"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net"
-	"net/http"
 
-	"github.com/srizzling/gotham/libs"
+	micro "github.com/micro/go-micro"
+	dregistry "github.com/srizzling/gotham/services/dregistry/proto"
 )
 
 // MACAddress type, registery currently supports only strings (maybe using protobuff can fix this)
@@ -22,25 +21,15 @@ type MagicPacket struct {
 	Payload [16]MACAddress
 }
 
-func getDevice(alias string) (*libs.Device, error) {
-	url := "http://localhost:8080/view/" + alias
-	response, err := http.Get(url)
-	var device libs.Device
-
+// internal function to retrive
+func getDevice(alias string) (*dregistry.Device, error) {
+	service := micro.NewService(micro.Name("gotham.services.DRegistry.client"))
+	client := dregistry.NewDRegistryClient("gotham.services.DRegistry", service.Client())
+	rsp, err := client.GetDevice(context.TODO(), &dregistry.GetDeviceRequest{Alias: alias})
 	if err != nil {
 		return nil, err
 	}
-
-	defer response.Body.Close()
-
-	body, err := ioutil.ReadAll(response.Body)
-	jsonErr := json.Unmarshal(body, &device)
-
-	if jsonErr != nil {
-		return nil, err
-	}
-
-	return &device, nil
+	return rsp.Device, nil
 }
 
 // GetMacAddress from an alias and return a pointer to a MacAddress
