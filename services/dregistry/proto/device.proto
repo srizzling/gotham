@@ -2,10 +2,19 @@ syntax = "proto3";
 
 service DRegistry {
     rpc View(ViewRequest) returns (DeviceRegistry) {}
-} 
+    rpc GetDevice(GetDeviceRequest) returns (GetDeviceResponse) {}
+}
 
 message DeviceRegistry {
     map <string, Device> devices = 1;
+}
+
+message GetDeviceRequest {
+    string Alias = 1;
+}
+
+message GetDeviceResponse {
+    Device Device = 1;
 }
 
 message ViewRequest {
