@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+service DRegistry {
+    rpc View(ViewRequest) returns (DeviceRegistry) {}
+} 
+
+message DeviceRegistry {
+    map <string, Device> devices = 1;
+}
+
+message ViewRequest {
+    string Service = 1;
+    repeated string Filter = 2;
+}
+
+message Device {
+    string Alias = 1;
+    string Manufacturer = 2;
+    string Model = 3;
+    string SerialNumber = 4;
+    string HWAddress = 5;
+    string WakeUpMethod = 6;
+    string HK_Accessory = 7; // HK_Accessory defination if available through homekit
+    repeated string BoundServices = 8;
+}

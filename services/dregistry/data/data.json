@@ -1,0 +1,29 @@
+{
+    "Batman": {
+        "Alias": "Batman",
+        "HWAddress": "63:71:83:1E:F2:B8",
+        "Model": "Model1",
+        "SerialNuber": "SerialNumber1",
+        "HK_Accessory": "Switch",
+        "WakeUpMethod": "wol",
+        "BoundServices": ["wol"]
+    },
+    "Batman2": {
+        "Alias": "Batman2",
+        "HWAddress": "71:9B:15:0F:E5:9C",
+        "Model": "Model2",
+        "SerialNuber": "SerialNumber2",
+        "HK_Accessory": "Switch",
+        "WakeUpMethod": "wol",
+        "BoundServices": ["wol"]
+    },
+    "Batman3": {
+        "Alias": "Batman3",
+        "Model": "Model3",
+        "SerialNuber": "SerialNumber3",
+        "HK_Accessory": "Switch",
+        "HWAddress": "63:71:83:1E:F2:B3",
+        "WakeUpMethod": "wol",
+        "BoundServices": ["wol", "light"]
+    }
+}
