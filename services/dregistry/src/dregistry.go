@@ -5,12 +5,11 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
-
-	proto "github.com/srizzling/gotham/services/dregistry/proto"
-
 	"strings"
 
 	"golang.org/x/net/context"
+
+	proto "github.com/srizzling/gotham/services/dregistry/proto"
 )
 
 // DRegistry stands for DeviceRegistry and how devices register to Gotham.
@@ -27,7 +26,10 @@ func (g *DRegistry) View(ctx context.Context, req *proto.ViewRequest, rsp *proto
 	var err error
 
 	service := req.Service
-	devices, err = g.filterDevicesByService(service)
+
+	if service != "" {
+		devices, err = g.filterDevicesByService(service)
+	}
 
 	// TODO: Think about this, and make it a bit more efficient
 	if len(req.Filter) > 0 {
@@ -41,16 +43,27 @@ func (g *DRegistry) View(ctx context.Context, req *proto.ViewRequest, rsp *proto
 	return err
 }
 
+// GetDevice is a way to to return a single device based on Alias
+func (g *DRegistry) GetDevice(ctx context.Context, req *proto.GetDeviceRequest, rsp *proto.GetDeviceResponse) error {
+	alias := req.Alias
+	device := g.Devices[alias]
+	if device == nil {
+		return errors.New("Alias doesn't exist")
+	}
+	rsp.Device = device
+	return nil
+}
+
 func (g *DRegistry) filterDevicesByService(filter string) (map[string]*proto.Device, error) {
 	// Currently only supports listing a single service for now
 	// TODO: expand filter to be more consise
 	if filter == "" {
-		return g.devices, nil
+		return g.Devices, nil
 	}
 
 	// TODO: This is probably an expensive call
 	filteredDevices := make(map[string]*proto.Device)
-	for _, d := range g.devices {
+	for _, d := range g.Devices {
 		for _, f := range d.BoundServices {
 			if f == filter {
 				filteredDevices[d.Alias] = d
@@ -93,7 +106,7 @@ func miniDevice(d *proto.Device, filters []string) {
 }
 
 // LoadData is a function that will loaddata into the map
-func loadData(path string) map[string]*proto.Device {
+func LoadData(path string) map[string]*proto.Device {
 	devices := make(map[string]*proto.Device)
 	content, err := ioutil.ReadFile(path)
 
