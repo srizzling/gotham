@@ -1,0 +1,13 @@
+syntax="proto3";
+
+service Service {
+    rpc RunAction(ActionRequest) returns (ActionResponse) {}
+}
+
+message ActionRequest {
+    map <string, string> properties = 1;
+}
+
+message ActionResponse {
+    map <string, string> properties = 1;
+}
