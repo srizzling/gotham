@@ -9,6 +9,7 @@ import (
 	"net"
 
 	micro "github.com/micro/go-micro"
+	base "github.com/srizzling/gotham/services/base/proto"
 	dregistry "github.com/srizzling/gotham/services/dregistry/proto"
 )
 
@@ -20,6 +21,9 @@ type MagicPacket struct {
 	Header  [6]byte
 	Payload [16]MACAddress
 }
+
+// Wol empty struct
+type Wol struct{}
 
 // internal function to retrive
 func getDevice(alias string) (*dregistry.Device, error) {
@@ -40,12 +44,9 @@ func getMacAddress(alias string) (*MACAddress, error) {
 
 	// Assign a byte array to each object and store in map
 	device, err := getDevice(alias)
-
-	fmt.Println(device.Alias)
-
 	hwAddr, err := net.ParseMAC(device.HWAddress)
-	if err != nil {
 
+	if err != nil {
 		return nil, err
 	}
 
@@ -71,6 +72,17 @@ func newMagicPacket(mac *MACAddress) *MagicPacket {
 	}
 
 	return &packet
+}
+
+// RunAction implementation for WolService
+func (g Wol) RunAction(ctx context.Context, req *base.ActionRequest, rsp *base.ActionResponse) error {
+	properties := req.Properties
+	alias := properties["alias"]
+	if alias == "" {
+		return errors.New("Alias not found")
+	}
+	sendMagicPacket(alias)
+	return nil
 }
 
 // SendMagicPacket sends a packet to a given an alias
