@@ -2,11 +2,12 @@ package wol
 
 import (
 	"bytes"
-	"context"
 	"encoding/binary"
 	"errors"
 	"fmt"
 	"net"
+
+	"golang.org/x/net/context"
 
 	micro "github.com/micro/go-micro"
 	base "github.com/srizzling/gotham/services/base/proto"

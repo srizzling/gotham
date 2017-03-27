@@ -14,7 +14,7 @@ func main() {
 	)
 
 	proto.RegisterDRegistryHandler(service.Server(), &dregistry.DRegistry{
-		Devices: dregistry.loadData("data/data.json"),
+		Devices: dregistry.LoadData("data/data.json"),
 	})
 
 	if err := service.Run(); err != nil {

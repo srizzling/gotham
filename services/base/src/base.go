@@ -1,7 +1,7 @@
 package base
 
 import (
-	"context"
+	"golang.org/x/net/context"
 
 	proto "github.com/srizzling/gotham/services/base/proto"
 )
