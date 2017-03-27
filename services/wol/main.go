@@ -10,7 +10,7 @@ import (
 
 func main() {
 	service := micro.NewService(
-		micro.Name("gotham.services.DRegistry"),
+		micro.Name("gotham.services.WolService"),
 	)
 
 	proto.RegisterServiceHandler(service.Server(), new(wol.Wol))
