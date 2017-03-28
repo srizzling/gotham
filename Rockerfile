@@ -1,0 +1,13 @@
+# Builder
+FROM golang:1.7
+MAINTAINER Sriram Venkatesh <venksriram@gmail.com>
+COPY ./ /go/src/github.com/srizzling/gotham
+WORKDIR /go/src/github.com/srizzling/gotham/services/{{ .SERVICE }}
+RUN go get github.com/tools/godep && CGO_ENABLED=0 GOOS=linux godep go build -a -installsuffix cgo -ldflags '-w' -o {{ .SERVICE }}
+EXPORT {{ .SERVICE }}
+
+# Run binary container
+FROM scratch
+IMPORT {{ .SERVICE }} /app/
+WORKDIR /app/{{ .SERVICE }}
+ENTRYPOINT /app/{{ .SERVICE }}
