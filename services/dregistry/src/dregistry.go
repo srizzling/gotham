@@ -17,8 +17,6 @@ type DRegistry struct {
 	Devices map[string]*proto.Device
 }
 
-//var devices map[string]*proto.Device
-
 // View is an API call to return a list of devices provided a filter. If filter is empty, it will return all
 // attributes
 func (g *DRegistry) View(ctx context.Context, req *proto.ViewRequest, rsp *proto.DeviceRegistry) error {
