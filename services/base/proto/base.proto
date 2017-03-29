@@ -11,3 +11,11 @@ message ActionRequest {
 message ActionResponse {
     map <string, string> properties = 1;
 }
+
+message HealthCheckRequest {
+    map <string, string> properties = 1;
+}
+
+message HealthCheckResponse {
+    map <string, string> properties = 1;
+}

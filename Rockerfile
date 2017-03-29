@@ -8,6 +8,6 @@ EXPORT {{ .SERVICE }}
 
 # Run binary container
 FROM scratch
-IMPORT {{ .SERVICE }} /app/
-WORKDIR /app/{{ .SERVICE }}
-ENTRYPOINT /app/{{ .SERVICE }}
+IMPORT {{ .SERVICE }}
+ENTRYPOINT ["/{{ .SERVICE }}"]
+TAG srizzling/gotham-{{ .SERVICE }}:{{ .VERSION }}

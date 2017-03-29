@@ -8,5 +8,6 @@ import (
 
 // Service Interface for all Services to be running an action
 type Service interface {
+	HealthCheck(context context.Context, req proto.HealthCheckRequest, res proto.HealthCheckResponse) error
 	RunAction(context context.Context, req proto.ActionRequest, res proto.ActionResponse) error
 }
