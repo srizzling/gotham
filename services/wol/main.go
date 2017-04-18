@@ -13,6 +13,8 @@ func main() {
 		micro.Name("gotham.services.WolService"),
 	)
 
+	service.Init()
+
 	proto.RegisterServiceHandler(service.Server(), new(wol.Wol))
 
 	if err := service.Run(); err != nil {

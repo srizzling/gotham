@@ -16,26 +16,25 @@ VERSION_FILE="VERSION.txt"
 IGNORE=("base" "tests")
 
 
-version() {
-    local SERVICE=shift
-    SERVICE=$(basename $SERVICE)
+function version() {
+    local SERVICE=$1
+    SERVICE=$(basename "$SERVICE")
     local VERSION_LOCAL
     while read -r LINE; do
-        echo "$LINE"
-        # echo "$LINE"
-        if  [[ $SERVICE == $LINE* ]]; then
-             local VERSION_LOCAL=$LINE
-             echo "$VERSION_LOCAL"
-        fi
-        echo "$VERSION_LOCAL"
-        
+        case "$LINE" in 
+            $SERVICE*)
+                VERSION_LOCAL=$(echo "$LINE" | cut -d ' ' -f 2);;
+            *)
+                echo "";;
+        esac      
     done < "$VERSION_FILE"
 
-    # if [[ $TYPE == "dev" ]];
-    # then
-    #     VERSION="$VERSION-dev"
-    # fi
-    # echo "$VERSION"
+    if [[ $TYPE == "dev" ]];
+    then
+        VERSION_LOCAL="$VERSION_LOCAL-dev"
+    fi
+
+    echo "$VERSION_LOCAL"
 }
 
 function contains() {
@@ -51,14 +50,19 @@ function contains() {
     return 1
 }
 
-for f in services/*; do
-    #printf "-------------------------------------------------------\n"
-    f=$(basename "$f")
-    if [ $(contains "${IGNORE[@]}" "$f") == "n" ]; then
-        printf "Building %s service binary in docker container\n" "$f"
-        version $f
-        # VERSION=$(version "$f")
-        # rocker build -var SERVICE="$f" -var VERSION="$VERSION"
-        #printf "-------------------------------------------------------\n"
-    fi
-done
+function build() {
+    for f in services/*; do
+        echo "-------------------------------------------------------"
+        f=$(basename "$f")
+        if [ $(contains "${IGNORE[@]}" "$f") == "n" ]; then
+            printf "Building %s service binary in docker container\n" "$f"
+            VERSION=$(version "$f")
+            f=${f//$'\n'/}
+            VERSION=${VERSION//$'\n'/}
+            rocker build -var "SERVICE=$f" -var "VERSION=$VERSION"
+            echo "-------------------------------------------------------"
+        fi
+    done
+}
+
+build

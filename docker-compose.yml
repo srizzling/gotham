@@ -1,27 +1,26 @@
 version: "2.1"
-
 services:
   consul:
-    command: agent -server -bootstrap -client=0.0.0.0
     image: consul:latest
+    command: agent -server -bootstrap -client=0.0.0.0
     ports:
       - "8500:8500"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8500"]
-      interval: 30s
+      interval: 1m
       timeout: 10s
-      retries: 5
+      retries: 3
   wol:
-    image: srizzling/gotham-wol:0.0.1
+    image: srizzling/gotham-wol:0.0.1-dev
     links:
       - consul
     depends_on:
       consul:
         condition: service_healthy
-  dregistry:
-    image: srizzling/gotham-dregistry:0.0.1
-    links:
-      - consul
-    depends_on:
-      consul:
-        condition: service_healthy
+  # dregistry:
+  #   image: srizzling/gotham-wol:0.0.1-dev
+  #   links:
+  #     - consul
+  #   depends_on:
+  #     - consul
+  #   restart: always

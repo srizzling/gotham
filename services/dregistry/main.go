@@ -13,6 +13,8 @@ func main() {
 		micro.Name("gotham.services.DRegistry"),
 	)
 
+	service.Init()
+
 	proto.RegisterDRegistryHandler(service.Server(), &dregistry.DRegistry{
 		Devices: dregistry.LoadData("data/data.json"),
 	})
