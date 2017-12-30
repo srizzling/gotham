@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "github.com/srizzling/gotham/shared/device/proto/device.proto";
+
+service DRegistry {
+    rpc GetDevice(GetDeviceRequest) returns (GetDeviceResponse) {}
+    rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse) {}
+}
+
+message GetDeviceRequest {
+    string Alias = 1;
+}
+
+message GetDeviceResponse {
+    Device Device = 1;
+}
+
+message RegisterDeviceRequest {
+    Device Device = 1;
+}
+
+message RegisterDeviceResponse {
+    bool Success = 1;
+}

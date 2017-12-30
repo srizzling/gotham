@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message Device {
+    string Alias = 1;
+    string Manufacturer = 2;
+    string Model = 3;
+    string SerialNumber = 4;
+    string HWAddress = 5;
+    string WakeUpMethod = 6;
+    string HK_Accessory = 7; // HK_Accessory defination if available through homekit
+    repeated string BoundServices = 8;
+}

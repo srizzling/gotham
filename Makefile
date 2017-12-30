@@ -1,15 +1,16 @@
 proto:
-	for d in services; do \
+	for d in */; do \
 		for f in $$d/**/proto/*.proto; do \
-			protoc --go_out=plugins=micro:. $$f; \
-			echo compiled: $$f; \
+			if [ -f "$${GOPATH}/src/github.com/srizzling/gotham/$$f" ]; \
+  			then \
+    			protoc --proto_path="$${GOPATH}/src" --go_out=plugins=micro:. $${GOPATH}/src/github.com/srizzling/gotham/$$f; \
+				echo compiled: $$f; \
+			fi\
 		done \
 	done
 
 build:
-	for d in services; do \
-		echo "building $1/$d" \
-		pushd $d/$1>/dev/null \
-		rocker build -var SERVICE=$1 \
-		popd >/dev/null \
+	for d in services/*; do \
+		echo "building $$d"; \
+		docker build --build-arg SERVICE=$$d .; \
 	done

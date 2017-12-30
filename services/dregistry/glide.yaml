@@ -1,0 +1,13 @@
+package: github.com/srizzling/gotham/services/dregistry
+import:
+- package: github.com/golang/protobuf
+  subpackages:
+  - proto
+- package: github.com/micro/go-micro
+  version: ^0.2.0
+  subpackages:
+  - client
+  - server
+- package: golang.org/x/net
+  subpackages:
+  - context
