@@ -20,12 +20,6 @@ import fmt "fmt"
 import math "math"
 import device "github.com/srizzling/gotham/shared/device/proto"
 
-import (
-	client "github.com/micro/go-micro/client"
-	server "github.com/micro/go-micro/server"
-	context "golang.org/x/net/context"
-)
-
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
@@ -106,79 +100,6 @@ func init() {
 	proto.RegisterType((*GetDeviceResponse)(nil), "GetDeviceResponse")
 	proto.RegisterType((*RegisterDeviceRequest)(nil), "RegisterDeviceRequest")
 	proto.RegisterType((*RegisterDeviceResponse)(nil), "RegisterDeviceResponse")
-}
-
-// Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ client.Option
-var _ server.Option
-
-// Client API for DRegistry service
-
-type DRegistryClient interface {
-	GetDevice(ctx context.Context, in *GetDeviceRequest, opts ...client.CallOption) (*GetDeviceResponse, error)
-	RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...client.CallOption) (*RegisterDeviceResponse, error)
-}
-
-type dRegistryClient struct {
-	c           client.Client
-	serviceName string
-}
-
-func NewDRegistryClient(serviceName string, c client.Client) DRegistryClient {
-	if c == nil {
-		c = client.NewClient()
-	}
-	if len(serviceName) == 0 {
-		serviceName = "dregistry"
-	}
-	return &dRegistryClient{
-		c:           c,
-		serviceName: serviceName,
-	}
-}
-
-func (c *dRegistryClient) GetDevice(ctx context.Context, in *GetDeviceRequest, opts ...client.CallOption) (*GetDeviceResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "DRegistry.GetDevice", in)
-	out := new(GetDeviceResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dRegistryClient) RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...client.CallOption) (*RegisterDeviceResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "DRegistry.RegisterDevice", in)
-	out := new(RegisterDeviceResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Server API for DRegistry service
-
-type DRegistryHandler interface {
-	GetDevice(context.Context, *GetDeviceRequest, *GetDeviceResponse) error
-	RegisterDevice(context.Context, *RegisterDeviceRequest, *RegisterDeviceResponse) error
-}
-
-func RegisterDRegistryHandler(s server.Server, hdlr DRegistryHandler, opts ...server.HandlerOption) {
-	s.Handle(s.NewHandler(&DRegistry{hdlr}, opts...))
-}
-
-type DRegistry struct {
-	DRegistryHandler
-}
-
-func (h *DRegistry) GetDevice(ctx context.Context, in *GetDeviceRequest, out *GetDeviceResponse) error {
-	return h.DRegistryHandler.GetDevice(ctx, in, out)
-}
-
-func (h *DRegistry) RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, out *RegisterDeviceResponse) error {
-	return h.DRegistryHandler.RegisterDevice(ctx, in, out)
 }
 
 func init() {
