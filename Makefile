@@ -3,7 +3,7 @@ proto:
 		for f in $$d/**/proto/*.proto; do \
 			if [ -f "$${GOPATH}/src/github.com/srizzling/gotham/$$f" ]; \
   			then \
-    			protoc --proto_path="$${GOPATH}/src" --go_out=plugin=micro:$${GOPATH}/src $${GOPATH}/src/github.com/srizzling/gotham/$$f; \
+    			protoc --proto_path="$${GOPATH}/src" --go_out=plugins=micro:$${GOPATH}/src $${GOPATH}/src/github.com/srizzling/gotham/$$f; \
 				echo compiled: $$f; \
 			fi\
 		done \
